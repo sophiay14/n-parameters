@@ -1,0 +1,6 @@
+---
+title: "N Parameters"
+author: "Sophia Yao"
+format: html
+---
+
