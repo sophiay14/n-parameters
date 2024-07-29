@@ -12,6 +12,9 @@ execute:
 
 library(tidyverse)
 library(primer.data)
+library(brms)
+library(tidybayes)
+library(gtsummary)
 ```
 
 ```{r}
@@ -44,4 +47,34 @@ ch10_data |>
       caption = "Random sample of 5% of the data from Gerber, Green, and Larimer (2008)")
 ```
 
-Using a dataset of the primary elections in 2006 in Michigan from Gerber, Green, and Larimer (2008), we seek to find the causal effect of postcards on voting in the 2026 Texas election. If certain groups of people are less likely to respond to postcards, for example they might not check their mail regularly, the sample of voters who actually received and potentially read the postcards might not be representative of the overall voting population.
+Using the 2006 Michigan primary elections dataset from Gerber, Green, and Larimer (2008), we aim to evaluate the causal effect of postcard mailings on voter turnout in the 2026 Texas election. The study assesses how postcard interventions impact voter behavior, noting that certain groups, like those who rarely check their mail, may be less represented in the sample of postcard recipients. Our analysis finds that age is positively related to voter turnout, with older individuals being more likely to vote. This suggests that age and other demographic factors must be considered to accurately gauge the effectiveness of postcard interventions on voter engagement.
+
+$$
+y_{i} = \beta_{0} + \beta_{1} age\_z + \beta_{2}male_i + \beta_{3}civic\_duty_i + \\ \beta_{4}hawthorne_i + \beta_{5}self_i + \beta_{6}neighbors_i + \\ \beta_{7}Sometimes\ vote_i + \beta_{8}Always\ vote_i + \\ \beta_{9}civic\_duty_i Sometimes\ vote_i + \beta_{10}hawthorne_i Sometimes\ vote_i + \\ \beta_{11}self_i Sometimes\ vote_i + \beta_{11}neighbors_i Sometimes\ vote_i + \\ \beta_{12}civic\_duty_i Always\ vote_i + \beta_{13}hawthorne_i Always\ vote_i + \\ \beta_{14}self_i Always\ vote_i + \beta_{15}neighbors_i Always\ vote_i + \epsilon_{i}
+$$
+
+```{r}
+#| label: model
+#| cache: true
+
+fit_postcard_vote <- brm(formula = voted ~ age_z + sex + treatment + voter_class + treatment*voter_class, 
+    data = ch10_data, 
+    family = gaussian(), 
+    refresh = 0, 
+    silent = 2,
+    seed = 19)
+```
+
+```{r}
+fit_postcard_vote |>
+  tbl_regression(intercept = TRUE, estimate_fun = function(x) style_sigfig(x, digits = 3))
+```
+
+```{r}
+#| label: plot
+
+ndata <- tibble()
+
+fit_postcard_vote |>
+  add_predicted_draws(newdata = ndata)
+```
