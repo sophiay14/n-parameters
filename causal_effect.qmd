@@ -44,4 +44,4 @@ ch10_data |>
       caption = "Random sample of 5% of the data from Gerber, Green, and Larimer (2008)")
 ```
 
-Using a dataset of the primary elections in 2006 in Michigan from Gerber, Green, and Larimer (2008), we seek to find the causal effect of postcards on voting in the 2026 Texas election.
+Using a dataset of the primary elections in 2006 in Michigan from Gerber, Green, and Larimer (2008), we seek to find the causal effect of postcards on voting in the 2026 Texas election. If certain groups of people are less likely to respond to postcards, for example they might not check their mail regularly, the sample of voters who actually received and potentially read the postcards might not be representative of the overall voting population.
